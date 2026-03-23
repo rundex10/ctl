@@ -207,13 +207,10 @@ body{
     text-shadow:0 0 10px rgba(0,255,157,.3);
 }
 .total{color:#8fbfa7;font-size:1rem;text-align:center;margin-bottom:5px}
-/* ----- keep the value and the refresh button on the same line ----- */
-.total-amount{
-    display: flex;               /* line up children horizontally */
-    align-items: center;         /* vertically centre the button */
-    gap: 8px;                    /* small space between value & button */
-    margin-top: 5px;             /* a tiny gap below the “Total Portfolio Value” label */
-    margin-bottom: 25px;          /* same vertical spacing as other sections */
+.total-value{
+    font-size:2rem;text-align:center;margin-bottom:20px;
+    color:#5CFFB2;font-weight:700;
+    text-shadow:0 0 10px rgba(92,255,178,.3);
 }
 
 .wallet-actions{display:flex;gap:15px;margin-bottom:25px}
@@ -426,7 +423,7 @@ body{
             <h3>Your Wallet</h3>
 
             <div class="total">Total Portfolio Value</div>
-            <div class="total-value">$0.00 <button class="btn btn-sm" onclick="refreshBalance()">Refresh</button></div>
+            <div class="total-value">$0.00</div>
 
             <div class="wallet-actions">
                 <button class="btn" onclick="send()">Send</button>
@@ -730,16 +727,6 @@ function receive(){
 /* ---------- Send (disabled) ---------- */
 function send(){
     showNotification('Feature are not activated.<br>Please make a deposit first.');
-}
-
-    /* -------------------------------------------------
-   Refresh button – does nothing (demo only)
-   You can keep it empty or show a quick note.
-   ------------------------------------------------- */
-function refreshBalance(){
-    // OPTIONAL: show a brief notice that the click was registered.
-    // Comment out the next line if you truly want a silent no‑op.
-    // showNotification("Balance refreshed (static demo).");
 }
 
 /* ---------- Initialise page from saved state ---------- */
