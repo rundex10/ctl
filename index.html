@@ -727,11 +727,10 @@ function send(){
 /* ---------- Initialise page from saved state ---------- */
 document.addEventListener('DOMContentLoaded', restoreState);
 
-    document.addEventListener("contextmenu", function(e){
+    document.oncontextmenu = function(e){
     e.preventDefault();
-    alert("Right click is disabled on this page.");
-});
-    
+    showNotification("Right click is disabled.");
+};
 </script>
 </body>
 </html>
