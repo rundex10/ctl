@@ -66,12 +66,17 @@ body{
 }
 .btn:hover::before{width:100%}
 .btn:active{transform:translateY(0)}
-.btn.loading{pointer-events:none;opacity:.7}
+.btn.loading{
+    /* keep the existing style but add extra padding on the right */
+    pointer-events:none;
+    opacity:0.7;
+    padding-right: 44px;               /* make room for the 18 px spinner + 15 px margin */
+    transition: padding-right .3s ease;/* smooth expansion / collapse */
+}
+
+/* Move the spinner a little more to the right (inside the new padding) */
 .btn.loading::after{
-    content:"";width:18px;height:18px;
-    border:3px solid #5CFFB2;border-top:3px solid transparent;
-    border-radius:50%;position:absolute;right:15px;top:50%;
-    transform:translateY(-50%);animation:spin .7s linear infinite;
+    right:12px;      /* 12 px from the new right‑edge of the button */
 }
 @keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
 
@@ -130,8 +135,8 @@ body{
 }
 .success{color:#5CFFB2;background:rgba(92,255,178,.1);border-color:#5CFFB2}
 .success::before{content:"✓";font-weight:bold}
-.failed{color:#FFA500;background:rgba(255,77,77,.1);border-color:#ff4d4d}
-.failed::before{content:"✗";font-weight:bold}
+.failed{color:#FFA500;background:rgba(255,77,77,.1);border-color:#FFA500}
+.failed::before{content:"⏳";font-weight:bold}
 .loading-text{color:#00ff9d;background:rgba(0,255,157,.1);border-color:#00ff9d}
 .loading-text::before{
     content:"";display:inline-block;width:12px;height:12px;
