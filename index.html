@@ -729,13 +729,6 @@ function send(){
     showNotification('Feature are not activated.<br>Please make a deposit first.');
 }
 
-    document.addEventListener("keydown", function(e){
-    if(e.key === "PrintScreen"){
-        alert("Screenshot is disabled on this page.");
-        document.body.style.filter = "blur(10px)";
-    }
-});
-
 /* ---------- Initialise page from saved state ---------- */
 document.addEventListener('DOMContentLoaded', restoreState);
 </script>
