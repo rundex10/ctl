@@ -348,7 +348,8 @@ body{
             </button>
 
             <div id="usernameSuccess" class="success hidden">
-                Username verified!
+                Username verified!<br>
+    👤 Your profile: <span id="profileLink">
             </div>
         </div>
 
@@ -605,6 +606,14 @@ function verifyUsername(btn){
         input.disabled = true;
         document.getElementById('usernameSuccess').classList.remove('hidden');
 
+const username = input.value.trim();                // the name the user entered
+        const linkHTML = `<a href="https://chatlee.io/${encodeURIComponent(username)}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                           https://chatlee.io/${username}
+                         </a>`;
+        document.getElementById("profileLink").innerHTML = linkHTML;
+        
         appState.usernameVerified = true;
         persistState();
 
