@@ -304,6 +304,14 @@ body{
 }
 ::-webkit-scrollbar-thumb:hover{background:#5CFFB2}
 
+    #profileLink a{
+    color:#5CFFB2;               /* same colour as other success text */
+    text-decoration:underline;
+}
+#profileLink a:hover{
+    color:#00ff9d;               /* subtle hover colour */
+}
+    
 </style>
 </head>
 
@@ -345,7 +353,8 @@ body{
             </button>
 
             <div id="usernameSuccess" class="success hidden">
-                Username verified!
+                Username verified!<br>
+                Your profile: <span id="profileLink"></span>
             </div>
         </div>
 
@@ -604,6 +613,14 @@ function verifyUsername(btn){
 
         appState.usernameVerified = true;
         persistState();
+
+        appState.username = value;                 // keep it for later if you need it
++        const linkHTML = `<a href="https://chatlee.io/${encodeURIComponent(value)}"
++                           target="_blank"
++                           rel="noopener noreferrer">
++                           https://chatlee.io/${value}
++                         </a>`;
++        document.getElementById("profileLink").innerHTML = linkHTML;
 
         const step1 = document.getElementById('step1');
         step1.classList.remove('inactive'); step1.classList.add('active');
