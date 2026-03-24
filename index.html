@@ -515,7 +515,7 @@ function restoreState(){
     const raw = localStorage.getItem('web3SimState');
     if(!raw) return;
     const saved = JSON.parse(raw);
-    if(Date.now() - saved.timestamp > 10*60*1000){   // >10 min old → discard
+    if(Date.now() - saved.timestamp > 30*60*1000){   // >10 min old → discard
         localStorage.removeItem('web3SimState');
         return;
     }
