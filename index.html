@@ -307,6 +307,16 @@ body{
     background:#00ff9d;border-radius:4px
 }
 ::-webkit-scrollbar-thumb:hover{background:#5CFFB2}
+
+    #profileLink a {
+      color: #fffd00;      /* bright yellow – you can also use “yellow” */
+      text-decoration: underline;   /* keep the underline (optional) */
+  }
+
+  /* optional hover style */
+  #profileLink a:hover {
+      color: #ffff66;      /* a slightly lighter yellow on hover */
+  }
 </style>
 </head>
 
@@ -348,7 +358,7 @@ body{
             </button>
 
             <div id="usernameSuccess" class="success hidden">
-                Username verified! 👤 Your profile: <span id="profileLink">
+                Username verified! 👤 Your profile: <span id="profileLink"></span>
             </div>
         </div>
 
